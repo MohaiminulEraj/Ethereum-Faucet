@@ -5,15 +5,30 @@ contract Faucet {
     // storing address of all the users that are using addFunds()
     uint256 public numOffFunders;
     mapping(address => bool) private funders;
+    mapping(uint256 => address) private lutFunders; // look up table funders
 
     receive() external payable {}
 
     function addFunds() external payable {
         address funder = msg.sender;
+        // prevent duplicatation
         if (!funders[funder]) {
-            numOffFunders++;
+            uint256 index = numOffFunders++;
             funders[funder] = true;
+            lutFunders[index] = funder;
         }
+    }
+
+    function getAllFunders() external view returns (address[] memory) {
+        address[] memory _funders = new address[](numOffFunders);
+        for (uint256 i = 0; i < numOffFunders; i++) {
+            _funders[i] = lutFunders[i];
+        }
+        return _funders;
+    }
+
+    function getFunderAtIndex(uint8 index) external view returns (address) {
+        return lutFunders[index];
     }
 }
 
