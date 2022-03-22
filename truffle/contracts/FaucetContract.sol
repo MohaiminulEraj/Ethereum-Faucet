@@ -15,18 +15,6 @@ contract Faucet {
             funders[funder] = true;
         }
     }
-
-    function getAllFunders() external view returns (address[] memory) {
-        address[] memory _funders = new address[](numOffFunders);
-        for (uint256 i = 0; i < numOffFunders; i++) {
-            _funders[i] = funders[i];
-        }
-        return _funders;
-    }
-
-    function getFunderAtIndex(uint8 index) external view returns (address) {
-        return funders[index];
-    }
 }
 
 // const { ethers } = require('ethers');
