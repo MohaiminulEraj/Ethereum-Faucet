@@ -7,6 +7,14 @@ contract Faucet {
     mapping(address => bool) private funders;
     mapping(uint256 => address) private lutFunders; // look up table funders
 
+    modifier limitWithdraw(uint256 withdrawAmount) {
+        require(
+            withdrawAmount <= 1000000000000000000,
+            "Cannot withdraw more than 1 ether"
+        );
+        _;
+    }
+
     receive() external payable {}
 
     function addFunds() external payable {
@@ -17,6 +25,13 @@ contract Faucet {
             funders[funder] = true;
             lutFunders[index] = funder;
         }
+    }
+
+    function withdraw(uint256 withdrawAmount)
+        external
+        limitWithdraw(withdrawAmount)
+    {
+        payable(msg.sender).transfer(withdrawAmount);
     }
 
     function getAllFunders() external view returns (address[] memory) {
@@ -34,5 +49,6 @@ contract Faucet {
 
 // const { ethers } = require('ethers');
 // const instance = await Faucet.deployed();
+// instance.withdraw("500000000000000000", {from: accounts[1]});
 // instance.addFunds({from: accounts[0], value: ethers.utils.parseEther('1')});
 // instance.addFunds({from: accounts[1], value: ethers.utils.parseEther('1')});
