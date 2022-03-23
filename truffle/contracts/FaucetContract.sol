@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
+import "./Owned.sol";
+import "./Logger.sol";
+import "./IFaucet.sol";
 
-contract Faucet {
+contract Faucet is Owned, Logger, IFaucet {
     // storing address of all the users that are using addFunds()
     uint256 public numOffFunders;
+
     mapping(address => bool) private funders;
     mapping(uint256 => address) private lutFunders; // look up table funders
 
@@ -17,7 +21,11 @@ contract Faucet {
 
     receive() external payable {}
 
-    function addFunds() external payable {
+    function emitLog() public pure override returns (bytes32) {
+        return "Faucet";
+    }
+
+    function addFunds() external payable override {
         address funder = msg.sender;
         // prevent duplicatation
         if (!funders[funder]) {
@@ -29,6 +37,7 @@ contract Faucet {
 
     function withdraw(uint256 withdrawAmount)
         external
+        override
         limitWithdraw(withdrawAmount)
     {
         payable(msg.sender).transfer(withdrawAmount);
