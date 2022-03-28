@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 import "./Owned.sol";
-import "./Logger.sol";
+// import "./Logger.sol";
 import "./IFaucet.sol";
 
-contract Faucet is Owned, Logger, IFaucet {
+contract Faucet is Owned, IFaucet {
     // storing address of all the users that are using addFunds()
     uint256 public numOffFunders;
 
@@ -21,9 +21,9 @@ contract Faucet is Owned, Logger, IFaucet {
 
     receive() external payable {}
 
-    function emitLog() public pure override returns (bytes32) {
-        return "Faucet";
-    }
+    // function emitLog() public pure override returns (bytes32) {
+    //     return "Faucet";
+    // }
 
     function addFunds() external payable override {
         address funder = msg.sender;
@@ -58,6 +58,6 @@ contract Faucet is Owned, Logger, IFaucet {
 
 // const { ethers } = require('ethers');
 // const instance = await Faucet.deployed();
-// instance.withdraw("500000000000000000", {from: accounts[1]});
 // instance.addFunds({from: accounts[0], value: ethers.utils.parseEther('1')});
 // instance.addFunds({from: accounts[1], value: ethers.utils.parseEther('1')});
+// instance.withdraw("500000000000000000", {from: accounts[1]});
