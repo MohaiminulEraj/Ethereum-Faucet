@@ -14,7 +14,8 @@ out/
 
 # production
 build/
-
+generated/
+services/data/
 # misc
 .DS_Store
 *.pem

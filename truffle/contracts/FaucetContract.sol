@@ -8,6 +8,9 @@ contract Faucet is Owned, IFaucet {
     // storing address of all the users that are using addFunds()
     uint256 public numOffFunders;
 
+    event AddFund(uint256 numOffFunders, address owner, uint256 amount);
+    event WithDrawFund(uint256 numOffFunders, address owner, uint256 amount);
+
     mapping(address => bool) private funders;
     mapping(uint256 => address) private lutFunders; // look up table funders
 
@@ -25,22 +28,20 @@ contract Faucet is Owned, IFaucet {
     //     return "Faucet";
     // }
 
-    function addFunds() external payable override {
+    function addFunds(uint256 amount) external payable override {
         address funder = msg.sender;
         // prevent duplicatation
         if (!funders[funder]) {
             uint256 index = numOffFunders++;
             funders[funder] = true;
             lutFunders[index] = funder;
+            emit AddFund(numOffFunders, funder, amount);
         }
     }
 
-    function withdraw(uint256 withdrawAmount)
-        external
-        override
-        limitWithdraw(withdrawAmount)
-    {
+    function withdraw(uint256 withdrawAmount) external override {
         payable(msg.sender).transfer(withdrawAmount);
+        emit WithDrawFund(numOffFunders, msg.sender, withdrawAmount);
     }
 
     function getAllFunders() external view returns (address[] memory) {

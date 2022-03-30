@@ -1,4 +1,6 @@
-# Getting Started with Create React App
+# **ETHEREUM FAUCET**
+## **PROJECT DEMO**
+![](public/img/Ethereum-Faucet.gif)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

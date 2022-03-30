@@ -1,0 +1,31 @@
+
+±©dataSources:
+  - kind: ethereum
+    mapping:
+      abis:
+        - file:
+            /: /ipfs/QmY14eK7fhR8WvGwL9RGj9fPk1FH4CuURZHYrLqwSuFXFp
+          name: Faucet
+      apiVersion: 0.0.5
+      entities:
+        - AddFund
+        - WithDrawFund
+      eventHandlers:
+        - event: 'AddFund(uint256,address,uint256)'
+          handler: handleAddFund
+        - event: 'WithDrawFund(uint256,address,uint256)'
+          handler: handleWithDrawFund
+      file:
+        /: /ipfs/QmR6HiigcQ6rbT1CzCQWtbuMPxXZ8Gb9BzhczmSeZjayz3
+      kind: ethereum/events
+      language: wasm/assemblyscript
+    name: Faucet
+    network: ganache
+    source:
+      abi: Faucet
+      address: '0x2FDdCbCAECb3f95948b0f9f6b398f6fb01cf0509'
+schema:
+  file:
+    /: /ipfs/QmcMixs4pWo16EczaazPL3nP8MofbedZ7kXJSsNq5yhaBX
+specVersion: 0.0.2
+©

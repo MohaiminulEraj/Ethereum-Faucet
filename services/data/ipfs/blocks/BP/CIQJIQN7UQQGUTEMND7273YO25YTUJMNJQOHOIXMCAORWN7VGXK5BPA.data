@@ -1,0 +1,10 @@
+
+¨ type ExampleEntity @entity {
+  id: ID!
+  count: BigInt!
+  numOffFunders: BigInt! # uint256
+  owner: Bytes! # address
+  to: Bytes! # address
+  amount: BigInt!
+}
+ 

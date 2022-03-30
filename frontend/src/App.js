@@ -2,15 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import "./App.css";
 import { ethers, Contract } from "ethers";
 import detectEthereumProvider from '@metamask/detect-provider';
-import { BigNumber } from "bignumber.js";
-// import * as fs from "fs";
-// import { loadContract } from "./utils/load-contract";
-// import loadContract from "../public/contracts/Faucet.json";
-import loadFaucetABI from "./Faucet.json";
 import FaucetABI from './contracts/Faucet.json';
-// import dotenv from 'dotenv';
-// // parsing .env file
-// dotenv.config()
 
 const App = () => {
 
@@ -89,6 +81,8 @@ const App = () => {
         // let accounts = await ethersJsApi.provider.request({ method: "eth_requestAccounts" });
         let accounts = await ethersJsApi.provider.listAccounts();;
         setAccount(accounts[0]);
+        setAccountBalance(ethers.utils.formatEther(await ethersJsApi.provider.getBalance(accounts[0])).toString())
+
       }
       // let c = new Contract(process.env.REACT_APP_CONTRACT_ADDRESS, contract, provider);
       // console.log(((await c.provider.getBalance(process.env.CONTRACT_ADDRESS)).toNumber()))
@@ -98,11 +92,16 @@ const App = () => {
 
   const addFunds = useCallback(async () => {
     const { signer, contract } = ethersJsApi;
-    const tx = await signer.sendTransaction({
+    const addFund = contract.connect(signer);
+    const tx = await addFund.addFunds(ethers.utils.parseEther("1.0"), {
       from: account,
       value: ethers.utils.parseEther("1.0"),
-      to: contract.address
     })
+    // const tx = await signer.sendTransaction({
+    //   from: account,
+    //   value: ethers.utils.parseEther("1.0"),
+    //   to: contract.address
+    // })
     await tx.wait();
     console.log(tx)
     // console.log(wait)
@@ -113,20 +112,12 @@ const App = () => {
 
   const withdrawFunds = async () => {
     const { signer, contract } = ethersJsApi;
-    const withdrawAmount = ethers.utils.parseEther("0.1")
+    const withdrawAmount = ethers.utils.parseEther("0.5")
     // console.log(await contract.withdraw(withdrawAmount))
     const withdraw = contract.connect(signer);
     const tx = await withdraw.withdraw(withdrawAmount, {
       from: account,
     });
-
-    // const tx = await contract.withdraw(withdrawAmount, {
-    //   from: account
-    // })
-    // const tx = await signer.sendTransaction({
-    //   to: account,
-    //   value: ethers.utils.parseEther("0.1")
-    // })
     await tx.wait();
     console.log(tx)
     reloadEffect();
@@ -142,7 +133,17 @@ const App = () => {
             </span>
             {
               account ?
-                account :
+                <>
+                  <span className="mr-2">{account}</span>
+                  {accountBalance &&
+                    <>
+                      |  <span className="ml-2">
+                        Wallet Balance: <strong>{accountBalance?.slice(0, 5)}</strong> ETH
+                      </span>
+                    </>
+                  }
+                </>
+                :
                 !ethersJsApi.provider ?
                   <>
                     <div className="notification is-warning is-size-6 is-rounded">
